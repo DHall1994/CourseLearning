@@ -1,7 +1,7 @@
 package demo.Dlabs;
 
 import java.util.Scanner;
-
+//labs03
 public class Lab3Exercises {
     public int getInt(String prompt) {
         Scanner s = new Scanner(System.in);
