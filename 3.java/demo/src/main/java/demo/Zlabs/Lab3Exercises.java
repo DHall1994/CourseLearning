@@ -1,4 +1,4 @@
-package demo.Dlabs;
+package demo.Zlabs;
 
 import java.util.Scanner;
 //labs03

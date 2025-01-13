@@ -1,8 +1,8 @@
-package demo.Dlabs;
+package demo.Zlabs;
 
 import java.util.Scanner;
 
-public class Program {
+public class Lab3Program {
     public static void main(String[] args) {
         Lab3Exercises myLab3 = new Lab3Exercises();
 
