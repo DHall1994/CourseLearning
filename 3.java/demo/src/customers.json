@@ -1,0 +1,24 @@
+[
+    {
+      "CustomerID": "ALFKI",
+      "CompanyName": "Alfreds Futterkiste",
+      "ContactName": "Maria Anders",
+      "ContactTitle": "Sales Representative",
+      "Address": "Obere Str. 57",
+      "City": "Berlin",
+      "Region": "NA",
+      "PostalCode": "12209",
+      "Country": "Germany"
+    },
+    {
+      "CustomerID": "ANATR",
+      "CompanyName": "Ana Trujillo Emparedados y helados",
+      "ContactName": "Ana Trujillo",
+      "ContactTitle": "Owner",
+      "Address": "Avda. de la Constitución 2222",
+      "City": "México D.F.",
+      "Region": "NA",
+      "PostalCode": "05021",
+      "Country": "Mexico"
+    }
+  ]  
