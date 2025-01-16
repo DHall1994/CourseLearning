@@ -26,7 +26,7 @@ public class Employee {
         return id;
     }
 
-    // Setters (private as per your instructions)
+    
     private void setName(String name) {
         this.name = name;
     }
