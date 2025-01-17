@@ -14,25 +14,25 @@ public class Program {
         // Process cars
         processCars(cars);
 
-         // Create manager
-         Manager manager = new Manager("Alice Johnson", "Manager");
+        // Create manager
+        Manager manager = new Manager("Alice Johnson", "Manager");
 
-         // Create employees
-         Employee emp1 = new Employee("John Smith", "Clerk");
-         Employee emp2 = new Employee("Jane Doe", "Accountant");
- 
-         // Create skilled worker
-         SkilledWorker skilledWorker = new SkilledWorker("Bob Martin", "Technician");
-         skilledWorker.addSkill("Welding");
-         skilledWorker.addSkill("Programming");
- 
-         // Add employees to manager
-         manager.addEmployee(emp1);
-         manager.addEmployee(emp2);
-         manager.addEmployee(skilledWorker);
- 
-         // Get manager's info
-         System.out.println(manager.getInfo());
+        // Create employees
+        Employee emp1 = new Employee("John Smith", "Clerk");
+        Employee emp2 = new Employee("Jane Doe", "Accountant");
+
+        // Create skilled worker
+        SkilledWorker skilledWorker = new SkilledWorker("Bob Martin", "Technician");
+        skilledWorker.addSkill("Welding");
+        skilledWorker.addSkill("Programming");
+
+        // Add employees to manager
+        manager.addEmployee(emp1);
+        manager.addEmployee(emp2);
+        manager.addEmployee(skilledWorker);
+
+        // Get manager's info
+        System.out.println(manager.getInfo());
     }
 
     // Method to process cars

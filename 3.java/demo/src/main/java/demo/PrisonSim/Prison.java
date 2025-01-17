@@ -1,12 +1,19 @@
 package demo.PrisonSim;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 import java.util.Scanner;
 
 public class Prison {
     private static final int MAX_CAPACITY = 120;
-    private static ArrayList<Prisoner> prisoners = new ArrayList<>();
+    private static final ArrayList<Prisoner> prisoners = new ArrayList<>();
+    // Composition: The Prison class uses an ArrayList to manage multiple Guard objects.
+    private static final ArrayList<Guard> guards = new ArrayList<>();
+    private static final HashMap<Location, ArrayList<Guard>> locationAssignments = new HashMap<>();
+    private static final ArrayList<Guard> offDutyGuards = new ArrayList<>();
     private static int incomingPrisoners = -1; // Tracks the incoming prisoners count (-1 means not calculated)
     private static final int DAYS_SINCE_LAST_RIOT = 224; // Fixed value for days since last riot
     private static final int LAST_RIOT_RISK_LEVEL = 144; // Fixed risk level for the last riot
@@ -14,6 +21,7 @@ public class Prison {
 
     public static void main(String[] args) {
         generateRandomPrisoners();
+        generateGuards();
 
         try (Scanner scanner = new Scanner(System.in)) {
             while (true) {
@@ -42,7 +50,9 @@ public class Prison {
                         }
                     }
                     case 6 -> handleRiotMenu(scanner);
-                    case 7 -> {
+                    case 7 -> searchUser(scanner); // Search for a prisoner or guard
+                    case 8 -> displayGuardAssignments(); // Show guard assignments
+                    case 9 -> {
                         System.out.println("Exiting...");
                         return;
                     }
@@ -60,7 +70,9 @@ public class Prison {
         System.out.println("4. How many incoming prisoners do we have?");
         System.out.println("5. Place the incoming prisoners");
         System.out.println("6. Riot Options");
-        System.out.println("7. Exit");
+        System.out.println("7. Search for Prisoner or Guard");
+        System.out.println("8. Display Guard Assignments");
+        System.out.println("9. Exit");
     }
 
     private static void handleRiotMenu(Scanner scanner) {
@@ -96,6 +108,101 @@ public class Prison {
                 }
                 default -> System.out.println("Invalid choice. Try again.");
             }
+        }
+    }
+
+    private static void generateGuards() {
+        for (int i = 1; i <= 40; i++) {
+            // Use the single-argument constructor
+            guards.add(new Guard("Guard" + i));
+        }
+    
+        Collections.shuffle(guards); // Randomize guard assignments
+    
+        int guardIndex = 0;
+        for (Location location : Location.values()) {
+            ArrayList<Guard> assignedGuards = new ArrayList<>();
+            for (int j = 0; j < 5; j++) { // Assign 5 guards per location
+                if (guardIndex < guards.size()) {
+                    Guard guard = guards.get(guardIndex);
+                    guard.setLocation(location); // Set the location for the guard
+                    assignedGuards.add(guard);
+                    guardIndex++;
+                }
+            }
+            locationAssignments.put(location, assignedGuards);
+        }
+    
+        while (guardIndex < guards.size()) {
+            offDutyGuards.add(guards.get(guardIndex));
+            guards.get(guardIndex).setLocation(null); // Mark guard as off-duty
+            guardIndex++;
+        }
+    }    
+
+    private static void searchUser(Scanner scanner) {
+        System.out.println("Search for (1) Prisoner or (2) Guard:");
+        int choice = scanner.nextInt();
+        scanner.nextLine(); // Consume newline
+    
+        if (choice == 1) {
+            System.out.print("Enter prisoner number (Example: Prisoner1): ");
+            String name = scanner.nextLine();
+            // Substitution: Stream uses a lambda to filter Prisoner objects, dynamically interacting with subclass instances through the Behaviour interface.
+            prisoners.stream()
+                    .filter(prisoner -> prisoner.getName().equalsIgnoreCase(name))
+                    .findFirst()
+                    .ifPresentOrElse(
+                            prisoner -> {
+                                // Assign a random location to the prisoner for display purposes
+                                Location randomLocation = Location.values()[new Random().nextInt(Location.values().length)];
+                                // Dynamic Behavior: The prisoner's location is updated at runtime to reflect their current state dynamically.
+                                prisoner.setLocation(randomLocation); // Update location dynamically
+                                System.out.println("Found: " + prisoner);
+                                System.out.println("Current Location: " + prisoner.getLocation().getLocationName() + prisoner.performAction());
+                            },
+                            () -> System.out.println("No prisoner found with that name.")
+                    );
+        } else if (choice == 2) {
+            System.out.print("Enter guard number (Example: Guard1): ");
+            String name = scanner.nextLine();
+            // Substitution: Stream uses a lambda to filter Prisoner objects, dynamically interacting with subclass instances through the Behaviour interface.
+            guards.stream()
+                    .filter(guard -> guard.getName().equalsIgnoreCase(name))
+                    .findFirst()
+                    .ifPresentOrElse(
+                            guard -> {
+                                int age = new Random().nextInt(43) + 25; // Random age between 25 and 67
+                                Location location = locationAssignments.entrySet().stream()
+                                        .filter(entry -> entry.getValue().contains(guard))
+                                        .map(Map.Entry::getKey)
+                                        .findFirst()
+                                        .orElse(null);
+    
+                                System.out.println("Found: " + guard.getName());
+                                System.out.println("Age: " + age);
+                                System.out.println("Current Location: " +
+                                        (location != null ? location.getLocationName() + guard.performAction() : "Not working today" + guard.performAction()));
+                            },
+                            () -> System.out.println("No guard found with that name.")
+                    );
+        } else {
+            System.out.println("Invalid choice. Returning to main menu.");
+        }
+    }    
+
+    private static void displayGuardAssignments() {
+        System.out.println("--- Guard Assignments ---");
+        for (Location location : locationAssignments.keySet()) {
+            System.out.println(location.getLocationName() + ":");
+            for (Guard guard : locationAssignments.get(location)) {
+                System.out.println("  - " + guard.getName());
+            }
+        }
+
+        System.out.println("\n--- Guards Not Working Today ---");
+        for (Guard guard : offDutyGuards) {
+            System.out.println("  - " + guard.getName());
         }
     }
 

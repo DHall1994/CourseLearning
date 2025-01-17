@@ -26,7 +26,6 @@ public class Employee {
         return id;
     }
 
-    
     private void setName(String name) {
         this.name = name;
     }
