@@ -113,7 +113,6 @@ public class Prison {
 
     private static void generateGuards() {
         for (int i = 1; i <= 40; i++) {
-            // Use the single-argument constructor
             guards.add(new Guard("Guard" + i));
         }
     
@@ -143,7 +142,7 @@ public class Prison {
     private static void searchUser(Scanner scanner) {
         System.out.println("Search for (1) Prisoner or (2) Guard:");
         int choice = scanner.nextInt();
-        scanner.nextLine(); // Consume newline
+        scanner.nextLine();
     
         if (choice == 1) {
             System.out.print("Enter prisoner number (Example: Prisoner1): ");
@@ -339,7 +338,7 @@ public class Prison {
                     if (alternativeBlock.getCurrentPrisoners() < alternativeBlock.getMaxCells()) {
                         assignPrisonerToBlock(name, riskLevel, alternativeBlock, crime, random);
                         System.out.println("WARNING: " + name + " reassigned to Block " + alternativeBlock.getBlockName() +
-                                " (does not match risk level)");
+                                " (block does not match current risk level: " + riskLevel + ")");
                         assigned = true;
                         break;
                     }
